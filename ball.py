@@ -13,6 +13,7 @@ class Ball(pygame.sprite.Sprite):
             'graphics/Tennisball.png').convert_alpha()
         self.rect = self.image.get_rect(midbottom=pos)
         self.y_velocity = -4
+        self.x_velocity = 0
 
     def ready_state(self, ready_status, x):
         if ready_status:
@@ -20,7 +21,10 @@ class Ball(pygame.sprite.Sprite):
 
     def update(self, ready_state, player_x_velocity, player_sprite):
         if ready_state:
-            self.x_velocity = player_x_velocity
+            if self.bar_moving():
+                self.x_velocity = player_x_velocity
+            else:
+                self.x_velocity = 0
         if not ready_state:
             self.move_ball()
             self.bar_bounce(player_sprite)
@@ -39,6 +43,8 @@ class Ball(pygame.sprite.Sprite):
 
             if self.bar_moving():
                 self.x_velocity = bar.x_velocity
+            else:
+                self.x_velocity = self.x_velocity
 
     def bounce_y(self):
         if self.rect.y <= 0:
@@ -60,5 +66,6 @@ class Ball(pygame.sprite.Sprite):
     def wasted(self, player_spirit):
         if self.rect.y == screen_height+30:
             player_spirit.wasted()
-            pos = pos = (screen_width/2, screen_height-30)
+            pos = (screen_width/2, screen_height-30)
             self.rect = self.image.get_rect(midbottom=pos)
+            self.x_velocity = 0

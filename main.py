@@ -1,3 +1,4 @@
+from brick import Brick
 from ball import Ball
 from player import Player
 import pygame
@@ -12,6 +13,12 @@ class Game:
         self.ball_sprite = Ball(
             (screen_width/2, screen_height-30))
         self.ball = pygame.sprite.GroupSingle(self.ball_sprite)
+        self.bricks = pygame.sprite.Group()
+
+        for r in range(1, 9):
+            for c in range(1, 8):
+                brick_sprite = Brick(((c*105)+30, (r*35)+100))
+                self.bricks.add(brick_sprite)
 
     def run(self):
         self.player.update()
@@ -24,9 +31,11 @@ class Game:
             self.player_sprite.rect.x, self.player_sprite.rect.y)
         self.ball_sprite.update(self.player_sprite.ready,
                                 self.player_sprite.x_velocity, self.player_sprite)
-        # draw sprites
-        # Update Sprites
-        pass
+
+        for brick in self.bricks:
+            screen.blit(brick.surf, brick.rect)
+
+        self.bricks.update(self.ball_sprite)
 
 
 if __name__ == '__main__':
